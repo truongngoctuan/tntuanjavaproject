@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="D:/Temp/PROJ_JES_001/JExcelMatchUp/poi-3.7-beta1-20100620.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/D:/Temp/PROJ_JES_001/poi-3.7-beta1/docs/apidocs/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

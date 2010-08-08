@@ -1,0 +1,42 @@
+﻿FilterBadData
+overview: chương trình có nhiệm vụ cung cấp các hàm (nhận đối số động từ file) để loại bỏ các dữ liệu "xấu" - không cần thiết hoặc bị lỗi; chỉ để lại các dữ liệu có thể dùng được để phục vụ cho 1 công việc khác
+
+Lang: java console hoặc java GUI
+req:
+1. giao diện
+	1.1 có thể chạy chương trình dưới dạng console
+		1.1.1 các đối số nhận từ 1 file đầu vào
+	1.2 chạy chương trình dưới dạng GUI
+		1.2.1 giao diện GUI giống như dạng wizard, 
+			1 tab cho phép thao tác với dữ liệu đầu vào, có nút next tới tab kế tiếp,
+			1 tab cho add các func và arg tương ứng, có nút next cho tab tiếp,
+			1 tab cho chỉnh file đầu ra, format,..., nút "thực hiện"
+2. tổng quát hóa
+	2.1 các func lấy danh sách arg từ file 
+	2.2 danh sách cac func lưu dưới dang xml để dễ quản lý
+3. thao tác dữ liệu trong file excel
+	3.1 đọc file excel
+	3.2 ghi file excel
+4. cung cấp nhiểu hàm thông dụng cho các công việc thông dụng
+	4.1 xóa dòng thứ xx
+	4.2 xóa dòng theo dk cột = string
+	4.3 xóa dòng theo dk cột trong range
+	4.4 xóa dữ liệu của cột theo dk cột = string
+	4.5 xóa dữ liệu của cột theo dk cột trong range
+	4.6 subtotal
+	4.7 phân loại dữ liệu
+	4.8 convert qua lại giữa tcvn arial vni-times
+	4.9 sort theo cột
+	4.10 match up 2 cột
+	4.11 match up n cột với các dk khác nhau
+5. thông minh
+	5.1 lưu thông tin vào file (cho người dùng chọn) để dùng cho lần sau
+	5.2 học hỏi trong quá trình phân loại dữ liệu: cung cấp tất cả dữ liệu đầu vào, --> phân loại --> lưu file --> chọn file đó tự phân loại
+6. chay tự động
+	6.1 chạy 1 lúc n file trong 1 folder với 1 list func định sẵn
+	
+	
+release 1: 3.1; 3.2; 4.1; (3 ngày)
+release 2: release 1 + 1.1.1; 2.1; 4.2; 4.3; 4.4; 4.5; (7 ngày)
+release 3: release 2 + 4.6; 5.1; 6.1; (7 ngày)
+release 4: release 3 + 4.8; 1.1.1; (5 ngày)

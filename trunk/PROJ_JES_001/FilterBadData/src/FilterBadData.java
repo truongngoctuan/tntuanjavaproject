@@ -22,7 +22,7 @@ public class FilterBadData {
 	}
 	private void CreateDataTableAndData() throws IOException
 	{
-		InputStream inp = new FileInputStream("LDH.xls");
+		InputStream inp = new FileInputStream("C:\\LDH.xls");
 		Workbook wb = new HSSFWorkbook(inp);
 	    Sheet sheet = wb.getSheetAt(0);
 	    Row row = sheet.getRow(2);
@@ -31,9 +31,29 @@ public class FilterBadData {
 	        cell = row.createCell(3);
 	    cell.setCellType(Cell.CELL_TYPE_STRING);
 	    cell.setCellValue("TNT");
+	    
+	    int iCountNew = 0;
+	    int iCountOld = 0;
+	    Sheet sheet2 = wb.createSheet("aaa");
+		for (Row rowi : sheet) {
+			if (iCountOld == 5)
+			{
+				
+			}
+			else
+			{				
+				sheet2.createRow(1);
+				Row rowtemp = sheet2.getRow(iCountNew);
+				rowtemp = rowi;
+				iCountNew++;
+			}
+				
+			iCountOld++;
+		}
+
 
 	    // Write the output to a file
-	    FileOutputStream fileOut = new FileOutputStream("LDH.xls");
+	    FileOutputStream fileOut = new FileOutputStream("C:\\LDH.xls");
 	    wb.write(fileOut);
 	    fileOut.close();
 

@@ -25,12 +25,12 @@ public class FilterBadData {
 		InputStream inp = new FileInputStream("C:\\LDH.xls");
 		Workbook wb = new HSSFWorkbook(inp);
 	    Sheet sheet = wb.getSheetAt(0);
-	    Row row = sheet.getRow(2);
-	    Cell cell = row.getCell(3);
-	    if (cell == null)
-	        cell = row.createCell(3);
-	    cell.setCellType(Cell.CELL_TYPE_STRING);
-	    cell.setCellValue("TNT");
+	    //Row row = sheet.getRow(2);
+	    //Cell cell = row.getCell(3);
+	    //if (cell == null)
+	    //    cell = row.createCell(3);
+	    //cell.setCellType(Cell.CELL_TYPE_STRING);
+	    //cell.setCellValue("TNT");
 	    
 	    int iCountNew = 0;
 	    int iCountOld = 0;
@@ -48,20 +48,41 @@ public class FilterBadData {
 				int iCountRow = 0;
 				for (Cell celli : rowi) {
 					// Do something here
-					if (celli == null)
-				        celli = rowtemp.createCell(iCountRow);
-					celli = rowi.getCell(iCountRow);
+					if (celli != null)
+					{
+						Cell cellTemp = rowtemp.createCell(iCountRow);
+						cellTemp.setCellType(celli.getCellType());
+						//cellTemp.setCellValue("111");
+						switch(celli.getCellType()) {
+					      case Cell.CELL_TYPE_STRING:
+					    	  cellTemp.setCellValue(celli.getRichStringCellValue().getString());
+					        break;
+					      case Cell.CELL_TYPE_NUMERIC:
+					        if(DateUtil.isCellDateFormatted(celli)) {
+					        	cellTemp.setCellValue(celli.getDateCellValue());
+					        } else {
+					        	cellTemp.setCellValue(celli.getNumericCellValue());
+					        }
+
+					        break;
+					      case Cell.CELL_TYPE_BOOLEAN:
+					    	  cellTemp.setCellValue(celli.getBooleanCellValue());
+					        break;
+					      case Cell.CELL_TYPE_FORMULA:
+					    	  cellTemp.setCellValue(celli.getCellFormula());
+					        break;
+						}
 					iCountRow++;
 				}
 
 				//rowtemp = rowi;
 				iCountNew++;
 			}
-				
+			}	
 			iCountOld++;
+		
+
 		}
-
-
 	    // Write the output to a file
 	    FileOutputStream fileOut = new FileOutputStream("C:\\LDH.xls");
 	    wb.write(fileOut);

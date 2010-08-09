@@ -42,9 +42,19 @@ public class FilterBadData {
 			}
 			else
 			{				
-				sheet2.createRow(1);
+				sheet2.createRow(iCountNew);
+
 				Row rowtemp = sheet2.getRow(iCountNew);
-				rowtemp = rowi;
+				int iCountRow = 0;
+				for (Cell celli : rowi) {
+					// Do something here
+					if (celli == null)
+				        celli = rowtemp.createCell(iCountRow);
+					celli = rowi.getCell(iCountRow);
+					iCountRow++;
+				}
+
+				//rowtemp = rowi;
 				iCountNew++;
 			}
 				

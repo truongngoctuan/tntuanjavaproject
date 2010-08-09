@@ -24,70 +24,53 @@ public class FilterBadData {
 	{
 		InputStream inp = new FileInputStream("C:\\LDH.xls");
 		Workbook wb = new HSSFWorkbook(inp);
-	    Sheet sheet = wb.getSheetAt(0);
-	    //Row row = sheet.getRow(2);
-	    //Cell cell = row.getCell(3);
-	    //if (cell == null)
-	    //    cell = row.createCell(3);
-	    //cell.setCellType(Cell.CELL_TYPE_STRING);
-	    //cell.setCellValue("TNT");
+	    Sheet sheetOld = wb.getSheetAt(0);
+	    Sheet sheetNew = wb.createSheet("aaa");
 	    
-	    int iCountNew = 0;
-	    int iCountOld = 0;
-	    Sheet sheet2 = wb.createSheet("aaa");
-		for (Row rowi : sheet) {
-			if (iCountOld == 5)
-			{
-				
-			}
-			else
-			{				
-				sheet2.createRow(iCountNew);
+	    int nRow = sheetOld.getLastRowNum();
+	    for (int iCountnRow = 0; iCountnRow <= nRow; iCountnRow++)
+	    {
+	    	Row rowOld = sheetOld.getRow(iCountnRow);
+	    	Row rowNew = sheetNew.createRow(iCountnRow);
+			
+	    	int nCell = rowOld.getLastCellNum();
+	    	for (int iCountnCell = 0; iCountnCell <= nCell; iCountnCell++)
+	    	{
+	    		Cell cellOld = rowOld.getCell(iCountnCell);
+	    		if (cellOld == null)
+	    		{
+	    			continue;
+	    		}
+		    	Cell cellNew = rowNew.createCell(iCountnCell);
+		    	cellNew.setCellType(cellOld.getCellType());
+		    	
+	    		switch(cellOld.getCellType()) {
+			      case Cell.CELL_TYPE_STRING:
+			    	  cellNew.setCellValue(cellOld.getRichStringCellValue().getString());
+			        break;
+			      case Cell.CELL_TYPE_NUMERIC:
+			        if(DateUtil.isCellDateFormatted(cellOld)) {
+			        	cellNew.setCellValue(cellOld.getDateCellValue());
+			        } 
+			        else {
+			        	cellNew.setCellValue(cellOld.getNumericCellValue());
+			        }
 
-				Row rowtemp = sheet2.getRow(iCountNew);
-				int iCountRow = 0;
-				for (Cell celli : rowi) {
-					// Do something here
-					if (celli != null)
-					{
-						Cell cellTemp = rowtemp.createCell(iCountRow);
-						cellTemp.setCellType(celli.getCellType());
-						//cellTemp.setCellValue("111");
-						switch(celli.getCellType()) {
-					      case Cell.CELL_TYPE_STRING:
-					    	  cellTemp.setCellValue(celli.getRichStringCellValue().getString());
-					        break;
-					      case Cell.CELL_TYPE_NUMERIC:
-					        if(DateUtil.isCellDateFormatted(celli)) {
-					        	cellTemp.setCellValue(celli.getDateCellValue());
-					        } else {
-					        	cellTemp.setCellValue(celli.getNumericCellValue());
-					        }
-
-					        break;
-					      case Cell.CELL_TYPE_BOOLEAN:
-					    	  cellTemp.setCellValue(celli.getBooleanCellValue());
-					        break;
-					      case Cell.CELL_TYPE_FORMULA:
-					    	  cellTemp.setCellValue(celli.getCellFormula());
-					        break;
-						}
-					iCountRow++;
+			        break;
+			      case Cell.CELL_TYPE_BOOLEAN:
+			    	  cellNew.setCellValue(cellOld.getBooleanCellValue());
+			        break;
+			      case Cell.CELL_TYPE_FORMULA:
+			    	  cellNew.setCellValue(cellOld.getCellFormula());
+			        break;
 				}
-
-				//rowtemp = rowi;
-				iCountNew++;
-			}
-			}	
-			iCountOld++;
-		
-
-		}
+	    	}
+	    }
+	    
 	    // Write the output to a file
 	    FileOutputStream fileOut = new FileOutputStream("C:\\LDH.xls");
 	    wb.write(fileOut);
 	    fileOut.close();
-
 	}
 	private void RunFilter()
 	{

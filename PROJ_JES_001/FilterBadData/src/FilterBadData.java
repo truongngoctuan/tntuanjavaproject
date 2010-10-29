@@ -11,17 +11,22 @@ import org.apache.poi.hssf.usermodel.*;
 
 
 public class FilterBadData {
-	private ExcelFile m_FileIn; 
-	private ExcelFile m_FileOut;
+	private ExcelFile m_FileIn = null; 
+	private ExcelFile m_FileOut = null;
 	private FunctionManager m_ListFunction; 
-	private DataTable m_DBAllCell; 
+	//private DataTable m_DBAllCell;
+	private ExcelDataTable m_EData;
 	
 	public void RunApplication() throws IOException
 	{
 		CreateDataTableAndData();
+		RunFilter();
+		WriteDataToFile();
 	}
 	private void CreateDataTableAndData() throws IOException
 	{
+		m_EData = ExcelFile.ReadFromFile(m_FileIn);
+		/*
 		InputStream inp = new FileInputStream("C:\\LDH.xls");
 		Workbook wb = new HSSFWorkbook(inp);
 	    Sheet sheetOld = wb.getSheetAt(0);
@@ -71,14 +76,15 @@ public class FilterBadData {
 	    FileOutputStream fileOut = new FileOutputStream("C:\\LDH.xls");
 	    wb.write(fileOut);
 	    fileOut.close();
+	    */
 	}
 	private void RunFilter()
 	{
 		
 	}
-	private void WriteDataToFile()
+	private void WriteDataToFile() throws IOException
 	{
-		
+		ExcelFile.WriteToFile(m_FileOut, m_EData);
 	}
 	public void SetFileIn(ExcelFile FileIn)
 	{

@@ -86,7 +86,7 @@ public class jfTestExcelTableModel extends javax.swing.JFrame {
         ExcelTableModel tb = null;
         try {
             // TODO add your handling code here:
-            tb = ExcelFileHelper.GetDataFromFile("C:\\NT.xls");
+            tb = ExcelFileHelper.GetDataFromFile("C:\\COM TAM CALI 1 - NT 2010_10_12.xls");
             
         } catch (FileNotFoundException ex) {
             Logger.getLogger(jfTestExcelTableModel.class.getName()).log(Level.SEVERE, null, ex);

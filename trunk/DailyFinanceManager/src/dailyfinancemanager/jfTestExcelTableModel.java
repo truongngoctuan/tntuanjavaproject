@@ -11,15 +11,17 @@
 
 package dailyfinancemanager;
 
-import DAO.BasicFunction;
-import DAO.DailyFinanceFunction;
 import DAO.ExcelFileHelper;
 import DAO.ExcelTableModel;
-import DAO.SubTotalFunction;
+import DAO.HHCTHourFunction;
+import java.awt.event.WindowEvent;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 
 /**
  *
@@ -43,6 +45,7 @@ public class jfTestExcelTableModel extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(800, 600));
@@ -62,20 +65,29 @@ public class jfTestExcelTableModel extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
+        jLabel1.setText("jLabel1");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 526, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 526, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(55, 55, 55)
+                        .addComponent(jLabel1)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(17, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -83,20 +95,74 @@ public class jfTestExcelTableModel extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        ExcelTableModel tb = null;
-        try {
-            // TODO add your handling code here:
-            tb = ExcelFileHelper.GetDataFromFile("C:\\COM TAM CALI 1 - NT 2010_10_12.xls");
-            
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(jfTestExcelTableModel.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(jfTestExcelTableModel.class.getName()).log(Level.SEVERE, null, ex);
+
+        //---------------------------------------------------------
+        //tao 1 thread
+        //jfOnprocess jf = new jfOnprocess();
+
+        //jf.pack();
+        //jf.setVisible(true);
+
+
+        //---------------------------------------------------------
+        //lay danh sach file torng thu muc
+        String[] strListFiles;
+        //http://www.rgagnon.com/javadetails/java-0370.html
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        if (chooser.showDialog(this, null) == JFileChooser.CANCEL_OPTION)
+        {
+            //chooser.getCurrentDirectory();
+            this.processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+            return;
         }
 
-        SubTotalFunction bf = new SubTotalFunction();
-        bf.DoFunction(tb);
-        jTable1.setModel(bf.GetResult());
+        strListFiles = chooser.getSelectedFile().list(new FilenameFilter() {
+
+            public boolean accept(File file, String string) {
+                //throw new UnsupportedOperationException("Not supported yet.");
+
+                if((new File(file, string)).isDirectory()) return false;
+
+                if(!string.endsWith("xls")) return false;
+
+                return true;
+            }
+        });
+        HHCTHourFunction bf = new HHCTHourFunction();
+
+        for (int i = 0; i < strListFiles.length; i++) {
+            ExcelTableModel tb = null;
+            try {
+                // TODO add your handling code here:
+                tb = ExcelFileHelper.GetDataFromFile(chooser.getSelectedFile() + "\\" + strListFiles[i]);
+
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(jfTestExcelTableModel.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(jfTestExcelTableModel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+    //        SubTotalFunction bf = new SubTotalFunction();
+    //        bf.DoFunction(tb);
+
+            //File f = new File(strListFiles[i]);
+            String[] strSplitName = strListFiles[i].split(" ");
+            bf.SetDate(strSplitName[strSplitName.length - 1].replaceAll(".xls", ""));
+            bf.DoFunction(tb);
+            //jTable1.setModel(bf.GetResult());
+            //jLabel1.setText(chooser.getSelectedFile() + "\\" + strListFiles[i]);
+            //jf.SetText(chooser.getSelectedFile() + "\\" + strListFiles[i]);
+            //jf.run();
+
+            try {
+                ExcelFileHelper.SaveDataToFile(chooser.getSelectedFile() +  "\\kq" + String.valueOf(i) + ".xls", "Sheet1", bf.GetResult());
+            } catch (IOException ex) {
+                Logger.getLogger(jfTestExcelTableModel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }
+
     }//GEN-LAST:event_formWindowOpened
 
     /**
@@ -111,6 +177,7 @@ public class jfTestExcelTableModel extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables

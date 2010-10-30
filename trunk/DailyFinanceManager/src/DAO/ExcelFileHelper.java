@@ -7,11 +7,13 @@ package DAO;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 /**
  *
@@ -87,4 +89,45 @@ public class ExcelFileHelper {
 
         return tb;
     }
+
+    public static void SaveDataToFile(String strFileName,
+            String strSheetName,
+            ExcelTableModel tb) throws IOException
+    {
+        //http://poi.apache.org/spreadsheet/quick-guide.html#CreateCells
+        Workbook wb = new HSSFWorkbook();
+        //Workbook wb = new XSSFWorkbook();
+        CreationHelper createHelper = wb.getCreationHelper();
+        Sheet sheet = wb.createSheet(strSheetName);
+
+        //------------------------------------
+        //add row and cell
+        Cell cell;
+        for (int i = 0; i < tb.getRowCount(); i++) {
+            Row row = sheet.createRow(i);
+            for (int j = 0; j < tb.getColumnCount(); j++)
+            {
+                cell = row.createCell(j, Cell.CELL_TYPE_STRING);
+                cell.setCellValue(tb.getValueAt(i, j).toString());
+            }
+        }
+        //------------------------------------
+//        // Create a row and put some cells in it. Rows are 0 based.
+//        Row row = sheet.createRow((short)0);
+//        // Create a cell and put a value in it.
+//        Cell cell = row.createCell(0);
+//        cell.setCellValue(1);
+//
+//        // Or do it on one line.
+//        row.createCell(1).setCellValue(1.2);
+//        row.createCell(2).setCellValue(
+//             createHelper.createRichTextString("This is a string"));
+//        row.createCell(3).setCellValue(true);
+
+        // Write the output to a file
+        FileOutputStream fileOut = new FileOutputStream(strFileName);
+        wb.write(fileOut);
+        fileOut.close();
+    }
+
 }

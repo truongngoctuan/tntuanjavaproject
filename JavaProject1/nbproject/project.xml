@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.java.j2seproject</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/j2se-project/3">
+            <name>JavaProject1</name>
+            <source-roots>
+                <root id="src.dir"/>
+                <root id="JavaProject12.dir"/>
+                <root id="java.dir"/>
+                <root id="JavaProject13.dir"/>
+                <root id="JavaProject14.dir"/>
+                <root id="JavaProject15.dir"/>
+            </source-roots>
+            <test-roots>
+                <root id="test.src.dir"/>
+                <root id="test.testcases.dir"/>
+                <root id="test.JavaProject12.dir"/>
+            </test-roots>
+        </data>
+    </configuration>
+</project>

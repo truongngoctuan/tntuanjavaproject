@@ -23,22 +23,21 @@ public class BasicFunction {
     {
         PreDoFunction(tb);
         for (iRowCount = 0; iRowCount < tb.getRowCount(); iRowCount++) {
-            PreDoFunctionPerRow(tb);
-            for (iCellCount = 0; iCellCount < tb.getColumnCount(); iCellCount++) {
-                DoFunctionPerCell(tb);
+            if (CheckNeedsCellSuitWithCondition(tb))
+            {
+                DoFunctionPerRow(tb);
             }
-            PostDoFunctionPerRow(tb);
         }
         PostDoFunction(tb);
     }
 
     protected void PreDoFunction(ExcelTableModel tb){}
 
-    protected void PreDoFunctionPerRow(ExcelTableModel tb){}
-
-    protected void DoFunctionPerCell(ExcelTableModel tb){}
-
-    protected void PostDoFunctionPerRow(ExcelTableModel tb){}
+    protected boolean CheckNeedsCellSuitWithCondition(ExcelTableModel tb)
+    {
+        return true;
+    }
+    protected void DoFunctionPerRow(ExcelTableModel tb){}
 
     protected void PostDoFunction(ExcelTableModel tb){}
 

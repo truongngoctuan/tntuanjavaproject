@@ -31,7 +31,8 @@ public class HHCTHourFunction extends BasicFunction{
         }
     }
 
-     private boolean CheckNeedsCellSuitWithCondition(ExcelTableModel tb)
+    @Override
+     protected boolean CheckNeedsCellSuitWithCondition(ExcelTableModel tb)
     {
          if (tb.getValueAt(iRowCount, 0) == null) return false;
          if (tb.getValueAt(iRowCount, 1) == null) return false;

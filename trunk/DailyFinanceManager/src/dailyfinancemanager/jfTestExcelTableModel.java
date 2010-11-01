@@ -95,74 +95,11 @@ public class jfTestExcelTableModel extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        jfOnprocess jf = new jfOnprocess();
 
-        //---------------------------------------------------------
-        //tao 1 thread
-        //jfOnprocess jf = new jfOnprocess();
-
-        //jf.pack();
-        //jf.setVisible(true);
-
-
-        //---------------------------------------------------------
-        //lay danh sach file torng thu muc
-        String[] strListFiles;
-        //http://www.rgagnon.com/javadetails/java-0370.html
-        JFileChooser chooser = new JFileChooser();
-        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        if (chooser.showDialog(this, null) == JFileChooser.CANCEL_OPTION)
-        {
-            //chooser.getCurrentDirectory();
-            this.processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-            return;
-        }
-
-        strListFiles = chooser.getSelectedFile().list(new FilenameFilter() {
-
-            public boolean accept(File file, String string) {
-                //throw new UnsupportedOperationException("Not supported yet.");
-
-                if((new File(file, string)).isDirectory()) return false;
-
-                if(!string.endsWith("xls")) return false;
-
-                return true;
-            }
-        });
-        HHCTHourFunction bf = new HHCTHourFunction();
-
-        for (int i = 0; i < strListFiles.length; i++) {
-            ExcelTableModel tb = null;
-            try {
-                // TODO add your handling code here:
-                tb = ExcelFileHelper.GetDataFromFile(chooser.getSelectedFile() + "\\" + strListFiles[i]);
-
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(jfTestExcelTableModel.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(jfTestExcelTableModel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-    //        SubTotalFunction bf = new SubTotalFunction();
-    //        bf.DoFunction(tb);
-
-            //File f = new File(strListFiles[i]);
-            String[] strSplitName = strListFiles[i].split(" ");
-            bf.SetDate(strSplitName[strSplitName.length - 1].replaceAll(".xls", ""));
-            bf.DoFunction(tb);
-            //jTable1.setModel(bf.GetResult());
-            //jLabel1.setText(chooser.getSelectedFile() + "\\" + strListFiles[i]);
-            //jf.SetText(chooser.getSelectedFile() + "\\" + strListFiles[i]);
-            //jf.run();
-
-            try {
-                ExcelFileHelper.SaveDataToFile(chooser.getSelectedFile() +  "\\kq" + String.valueOf(i) + ".xls", "Sheet1", bf.GetResult());
-            } catch (IOException ex) {
-                Logger.getLogger(jfTestExcelTableModel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-        }
-
+        jf.pack();
+        jf.setVisible(true);
+        jf.DoFunction();          
     }//GEN-LAST:event_formWindowOpened
 
     /**

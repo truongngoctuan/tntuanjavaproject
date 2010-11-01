@@ -11,22 +11,30 @@
 
 package dailyfinancemanager;
 
+import DAO.ExcelFileHelper;
+import DAO.ExcelTableModel;
+import DAO.HHCTHourFunction;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.SwingWorker;
+
 /**
  *
  * @author Buffet Cali
  */
-public class jfOnprocess extends javax.swing.JFrame implements Runnable{
+public class jfOnprocess extends javax.swing.JFrame{
     /** Creates new form jfOnprocess */
+    SwingWorker<Void, Void> m_UpdatePro;
     public jfOnprocess() {
         initComponents();
+        m_UpdatePro = new UpdateProcess();
     }
-
-    public void SetText(String str)
-    {
-        jLabel1.setText(str);
-        this.invalidate();
-    }
-
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -78,9 +86,101 @@ public class jfOnprocess extends javax.swing.JFrame implements Runnable{
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 
-    public void run() {
-        //throw new UnsupportedOperationException("Not supported yet.");
-        //this.invalidate();
+    void UpdatePro(String strNewText)
+    {
+        jLabel1.setText(strNewText);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(jfOnprocess.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        this.invalidate();
     }
 
+    public void DoFunction()
+    {
+        UpdateProcess up = new UpdateProcess();
+        up.execute();
+        //up.doInBackground();
+    }
+
+    
+
+    class UpdateProcess extends SwingWorker<Void, Void>{
+
+        @Override
+        protected Void doInBackground() {
+            //throw new UnsupportedOperationException("Not supported yet.");
+            DoFunction();
+            return null;
+        }
+
+        public String strUpdateText;
+
+        public void DoFunction() {
+
+            //---------------------------------------------------------
+            //tao 1 thread
+
+            //---------------------------------------------------------
+            //lay danh sach file torng thu muc
+            String[] strListFiles;
+            //http://www.rgagnon.com/javadetails/java-0370.html
+            JFileChooser chooser = new JFileChooser();
+            chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            if (chooser.showDialog(null, null) == JFileChooser.CANCEL_OPTION)
+            {
+                //chooser.getCurrentDirectory();
+                //this.processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+                return;
+            }
+
+            strListFiles = chooser.getSelectedFile().list(new FilenameFilter() {
+
+                public boolean accept(File file, String string) {
+                    //throw new UnsupportedOperationException("Not supported yet.");
+
+                    if((new File(file, string)).isDirectory()) return false;
+
+                    if(!string.endsWith("xls")) return false;
+
+                    return true;
+                }
+            });
+            HHCTHourFunction bf = new HHCTHourFunction();
+
+            for (int i = 0; i < strListFiles.length; i++) {
+                ExcelTableModel tb = null;
+                try {
+                    // TODO add your handling code here:
+                    tb = ExcelFileHelper.GetDataFromFile(chooser.getSelectedFile() + "\\" + strListFiles[i]);
+
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(jfTestExcelTableModel.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(jfTestExcelTableModel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                //File f = new File(strListFiles[i]);
+                String[] strSplitName = strListFiles[i].split(" ");
+                bf.SetDate(strSplitName[strSplitName.length - 1].replaceAll(".xls", ""));
+                bf.DoFunction(tb);
+
+                //cap nhat process
+                strUpdateText = strListFiles[i];
+                UpdatePro(strUpdateText);
+                //jTable1.setModel(bf.GetResult());
+                //jLabel1.setText(chooser.getSelectedFile() + "\\" + strListFiles[i]);
+
+                try {
+                    ExcelFileHelper.SaveDataToFile(chooser.getSelectedFile() +  "\\kq" + String.valueOf(i) + ".xls", "Sheet1", bf.GetResult());
+                } catch (IOException ex) {
+                    Logger.getLogger(jfTestExcelTableModel.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+
+    }
 }
+
+

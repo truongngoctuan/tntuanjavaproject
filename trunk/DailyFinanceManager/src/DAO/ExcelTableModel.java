@@ -68,6 +68,10 @@ public class ExcelTableModel implements TableModel{
         return null;
     }
 
+    public String getValueAtString(int rowIndex, int columnIndex) {
+        return getValueAt(rowIndex, columnIndex).toString();
+    }
+
     //@Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         if (m_arrData.size() > rowIndex && m_arrData.get(rowIndex).length > columnIndex)
@@ -75,6 +79,12 @@ public class ExcelTableModel implements TableModel{
             m_arrData.get(rowIndex)[columnIndex] = aValue.toString();
         }
     }
+
+    public void setLastRowValueAt(Object aValue, int columnIndex) {
+        setValueAt(aValue, getRowCount() - 1, columnIndex);
+    }
+
+
 
     //@Override
     public void addTableModelListener(TableModelListener l) {

@@ -15,6 +15,13 @@ public class BasicFunction {
 
     ExcelTableModel m_exTbNew;
 
+    String m_strFileName;
+
+    public void SetFileName(String strFileName)
+    {
+        m_strFileName = strFileName;
+    }
+
     public BasicFunction() {
         m_exTbNew = new ExcelTableModel();
     }

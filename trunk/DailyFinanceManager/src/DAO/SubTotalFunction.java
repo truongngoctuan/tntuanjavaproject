@@ -40,8 +40,6 @@ else
         }
     }
 
-
-
     @Override
     protected boolean CheckNeedsCellSuitWithCondition(ExcelTableModel tb)
     {

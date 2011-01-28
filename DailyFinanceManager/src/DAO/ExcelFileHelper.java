@@ -108,7 +108,13 @@ public class ExcelFileHelper {
             for (int j = 0; j < tb.getColumnCount(); j++)
             {
                 cell = row.createCell(j, Cell.CELL_TYPE_STRING);
+                try {
                 cell.setCellValue(tb.getValueAt(i, j).toString());
+                }
+                catch(Exception ex)
+                {
+                    System.out.println("");
+                }
             }
         }
         //------------------------------------

@@ -12,6 +12,7 @@
 package dailyfinancemanager;
 
 import DAO.BasicFunction;
+import DAO.CopyAllFileFunction;
 import DAO.DailyFinanceFunction;
 import DAO.ExcelFileHelper;
 import DAO.ExcelTableModel;
@@ -49,6 +50,7 @@ public class jfTestExcelTableModel extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(800, 600));
@@ -77,6 +79,13 @@ public class jfTestExcelTableModel extends javax.swing.JFrame {
             }
         });
 
+        jButton2.setText("tong hop nhieu file excel lam 1 file");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -89,13 +98,18 @@ public class jfTestExcelTableModel extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(55, 55, 55)
                         .addComponent(jLabel1))
-                    .addComponent(jButton1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton2)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -171,6 +185,71 @@ public class jfTestExcelTableModel extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        //---------------------------------------------------------
+        //lay danh sach file torng thu muc
+        String[] strListFiles;
+        //http://www.rgagnon.com/javadetails/java-0370.html
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        if (chooser.showDialog(null, null) == JFileChooser.CANCEL_OPTION)
+        {
+            //chooser.getCurrentDirectory();
+            //this.processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+            return;
+        }
+
+        strListFiles = chooser.getSelectedFile().list(new FilenameFilter() {
+
+            public boolean accept(File file, String string) {
+                //throw new UnsupportedOperationException("Not supported yet.");
+
+                if((new File(file, string)).isDirectory()) return false;
+
+                if(!string.endsWith("xls")) return false;
+
+                return true;
+            }
+        });
+
+        //DailyFinanceFunction bf = new DailyFinanceFunction();
+        CopyAllFileFunction bf = new CopyAllFileFunction();
+        String[] arrHeaderName = {"Mã hàng",
+            "Tên hàng",
+            "Số lượng",
+            "Thành tiền"};
+
+        int[] arrHeadderNeeded = {1, 2, 5, 11};
+
+        bf.SetAttribute(CopyAllFileFunction.Attribute.HEADER_COLUMNS, arrHeaderName);
+        bf.SetAttribute(CopyAllFileFunction.Attribute.COLUMNS_NEEDED_COPY, arrHeadderNeeded);
+
+        bf.PreDoFunctionOneTime(null);
+
+        for (int i = 0; i < strListFiles.length; i++) {
+            ExcelTableModel tb = null;
+            try {
+                // TODO add your handling code here:
+                tb = ExcelFileHelper.GetDataFromFile(chooser.getSelectedFile() + "\\" + strListFiles[i]);
+
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(jfTestExcelTableModel.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(jfTestExcelTableModel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            bf.SetFileName(strListFiles[i].replaceAll(".xls", ""));
+            bf.DoFunction(tb);
+
+            try {
+                ExcelFileHelper.SaveDataToFile(chooser.getSelectedFile() +  "\\kq" + String.valueOf(i) + ".xls", "Sheet1", bf.GetResult());
+            } catch (IOException ex) {
+                Logger.getLogger(jfTestExcelTableModel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     /**
     * @param args the command line arguments
     */
@@ -184,6 +263,7 @@ public class jfTestExcelTableModel extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;

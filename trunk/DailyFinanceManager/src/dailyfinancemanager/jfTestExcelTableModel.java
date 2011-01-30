@@ -273,13 +273,21 @@ public class jfTestExcelTableModel extends javax.swing.JFrame {
         }
         bf.SetAttribute(DataCustomerMobivi.Attribute.STATE, arrState);
         //----
-        String[] arrCity = new String[tbCity.getRowCount()];
+        String[] arrKeyCity = new String[tbCity.getRowCount()];
         for (int i = 0; i < tbCity.getRowCount(); i++) {
-            arrCity[i] = new String();
-            arrCity[i] = tbCity.getValueAtString(i, 1);
+            arrKeyCity[i] = new String();
+            arrKeyCity[i] = tbCity.getValueAtString(i, 1);
 
         }
-        bf.SetAttribute(DataCustomerMobivi.Attribute.CITY, arrCity);
+        bf.SetAttribute(DataCustomerMobivi.Attribute.KEY_CITY, arrKeyCity);
+        //----
+        String[] arrValueCity = new String[tbCity.getRowCount()];
+        for (int i = 0; i < tbCity.getRowCount(); i++) {
+            arrValueCity[i] = new String();
+            arrValueCity[i] = tbCity.getValueAtString(i, 2);
+
+        }
+        bf.SetAttribute(DataCustomerMobivi.Attribute.VALUE_CITY, arrValueCity);
 
         bf.DoFunction(tbData);
 

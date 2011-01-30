@@ -12,14 +12,16 @@ package DAO;
 public class DataCustomerMobivi extends BasicFunction {
 
     String[] _arrState = null;
-    String[] _arrCityInState = null;
+    String[] _arrKeyCityInState = null;
+    String[] _arrValueCityInState = null;
 
     public DataCustomerMobivi() {
     }
 
     public enum Attribute {
         STATE,
-        CITY
+        KEY_CITY,
+        VALUE_CITY
     }
     public void SetAttribute(Attribute att, Object objValue)
     {
@@ -31,9 +33,15 @@ public class DataCustomerMobivi extends BasicFunction {
                 break;
             }
 
-            case CITY:
+            case KEY_CITY:
             {
-                _arrCityInState = (String[])objValue;
+                _arrKeyCityInState = (String[])objValue;
+                break;
+            }
+
+            case VALUE_CITY:
+            {
+                _arrValueCityInState = (String[])objValue;
                 break;
             }
         }
@@ -50,13 +58,21 @@ public class DataCustomerMobivi extends BasicFunction {
 
         int iCountAppear = 0;
 
-        for (int i = 0; i < _arrCityInState.length; i++) {
+        for (int i = 0; i < _arrKeyCityInState.length; i++) {
             if (tb.getValueAtString(iRowCount, 1).equals(_arrState[i]))
             {
-                if(tb.getValueAtString(iRowCount, 0).indexOf(_arrCityInState[i]) >= 0)
+                if(tb.getValueAtString(iRowCount, 0).indexOf(_arrKeyCityInState[i]) >= 0)
                 {
-                    m_exTbNew.setLastRowValueAt(_arrCityInState[i], 2);
+                    m_exTbNew.setLastRowValueAt(_arrValueCityInState[i], 2);
                     iCountAppear++;
+
+                    if (_arrValueCityInState[i].equals("DISTRICT 10") ||
+                            _arrValueCityInState[i].equals("DISTRICT 11") ||
+                            _arrValueCityInState[i].equals("DISTRICT 12"))
+                    {//day la truong hop dac biet vi khi do
+                        //no luc nao cung tim dc q1 va q11 --> icount == 2
+                        iCountAppear--;
+                    }
                 //break;
                 }
             }
